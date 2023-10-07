@@ -6,6 +6,10 @@ from PyQt5.Qt import QHeaderView
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 
 
+dim_matrix1 = [0, 0]
+dim_matrix2 = [0, 0]
+
+
 class Bill(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -16,6 +20,10 @@ class Bill(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Интерактивный чек')
+        # self.Run()
+
+    def Run(self):
+        self.bt_add_row1.cliced.connect(self.MatrixAdd)
 
 
 
