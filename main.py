@@ -1,15 +1,31 @@
-import numpy as np
-from sys import stdin
-for _ in stdin:
+import csv
+import sys
 
-    number_rows = int(input("input number of rows:"))
+from PyQt5 import uic
+from PyQt5.Qt import QHeaderView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 
-    matrix = []
-    for i in range(number_rows):
-        row = input(f"input matrix's {i+1} row data\n")
 
-        matrix.append(list(map(lambda x: int(x), row.split())))
+class Bill(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("matrix_calc.ui", self)
+        self.prise_list = {}
 
-    matrix = np.array(matrix)
+        self.initUI()
 
-    print(matrix)
+    def initUI(self):
+        self.setWindowTitle('Интерактивный чек')
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    app.setStyle("Fusion")
+    ex = Bill()
+    ex.show()
+    sys.exit(app.exec())
