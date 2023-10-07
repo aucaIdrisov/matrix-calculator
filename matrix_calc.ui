@@ -86,6 +86,58 @@
      <string>Transpose</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="bt_add_row1">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>50</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add row</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_add_col1">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>80</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add col</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_add_row2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>300</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add row</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_add_col2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>330</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add col</string>
+    </property>
+   </widget>
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
