@@ -6,24 +6,37 @@ from PyQt5.Qt import QHeaderView
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 
 
-dim_matrix1 = [0, 0]
-dim_matrix2 = [0, 0]
-
-
-class Bill(QMainWindow):
+class MatrixCalculator(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("matrix_calc.ui", self)
+        uic.loadUi("MatrixCalculator.ui", self)
         self.prise_list = {}
 
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Интерактивный чек')
-        # self.Run()
+        self.setWindowTitle('Matrix Calculator')
+        self.Run()
 
     def Run(self):
-        self.bt_add_row1.cliced.connect(self.MatrixAdd)
+        self.bt_add_row1.clicked.connect(self.MatrixAdd)
+        self.bt_add_row2.clicked.connect(self.MatrixAdd)
+        self.bt_add_col1.clicked.connect(self.MatrixAdd)
+        self.bt_add_col2.clicked.connect(self.MatrixAdd)
+
+    def MatrixAdd(self):
+        sender = self.sender()
+        if sender.accessibleName() == "m1 row":
+            self.matrix1.setRowCount(self.matrix1.rowCount() + 1)
+
+        elif sender.accessibleName() == "m1 col":
+            self.matrix1.setColumnCount(self.matrix1.columnCount() + 1)
+
+
+
+
+
+
 
 
 
@@ -34,6 +47,6 @@ class Bill(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
-    ex = Bill()
+    ex = MatrixCalculator()
     ex.show()
     sys.exit(app.exec())

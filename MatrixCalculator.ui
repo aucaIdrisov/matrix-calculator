@@ -63,7 +63,7 @@
      <string>Transpose</string>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QTableWidget" name="matrix2">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -95,6 +95,9 @@
       <height>28</height>
      </rect>
     </property>
+    <property name="accessibleName">
+     <string>m1 row</string>
+    </property>
     <property name="text">
      <string>Add row</string>
     </property>
@@ -107,6 +110,9 @@
       <width>93</width>
       <height>28</height>
      </rect>
+    </property>
+    <property name="accessibleName">
+     <string>m1 col</string>
     </property>
     <property name="text">
      <string>Add col</string>
@@ -121,6 +127,9 @@
       <height>28</height>
      </rect>
     </property>
+    <property name="accessibleName">
+     <string>m2 row</string>
+    </property>
     <property name="text">
      <string>Add row</string>
     </property>
@@ -134,11 +143,14 @@
       <height>28</height>
      </rect>
     </property>
+    <property name="accessibleName">
+     <string>m2 row</string>
+    </property>
     <property name="text">
      <string>Add col</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>440</x>
