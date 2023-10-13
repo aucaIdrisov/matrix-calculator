@@ -162,6 +162,9 @@
     <layout class="QFormLayout" name="formLayout">
      <item row="1" column="0">
       <widget class="QRadioButton" name="multiplication">
+       <property name="accessibleName">
+        <string>multiplication</string>
+       </property>
        <property name="text">
         <string>Multiplication</string>
        </property>
@@ -169,6 +172,9 @@
      </item>
      <item row="3" column="0">
       <widget class="QRadioButton" name="subtraction">
+       <property name="accessibleName">
+        <string>subtraction</string>
+       </property>
        <property name="text">
         <string>Subtraction</string>
        </property>
@@ -176,6 +182,9 @@
      </item>
      <item row="4" column="0">
       <widget class="QRadioButton" name="determinant">
+       <property name="accessibleName">
+        <string>determinant</string>
+       </property>
        <property name="text">
         <string>Determinant</string>
        </property>
@@ -183,6 +192,9 @@
      </item>
      <item row="0" column="0">
       <widget class="QRadioButton" name="summation">
+       <property name="accessibleName">
+        <string>summation</string>
+       </property>
        <property name="text">
         <string>Summation</string>
        </property>

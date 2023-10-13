@@ -11,7 +11,7 @@ class MatrixCalculator(QMainWindow):
         super().__init__()
         uic.loadUi("MatrixCalculator.ui", self)
         self.prise_list = {}
-
+        self.Operation_for_now = None
         self.initUI()
 
     def initUI(self):
@@ -23,6 +23,17 @@ class MatrixCalculator(QMainWindow):
         self.bt_add_row2.clicked.connect(self.MatrixAdd)
         self.bt_add_col1.clicked.connect(self.MatrixAdd)
         self.bt_add_col2.clicked.connect(self.MatrixAdd)
+
+        self.summation.toggled.connect(self.OperationToDo)
+        self.multiplication.toggled.connect(self.OperationToDo)
+        self.subtraction.toggled.connect(self.OperationToDo)
+        self.determinant.toggled.connect(self.OperationToDo)
+
+    def CheckMultiplication(self):
+        for i in range(self.matrix1.rowCount()):
+            for j in range(self.matrix1.rowCount()):
+                print(self.matrix1.item(i, j).text(), end=" ")
+            print()
 
     def MatrixAdd(self):
         sender = self.sender()
@@ -38,16 +49,20 @@ class MatrixCalculator(QMainWindow):
         elif sender.accessibleName() == "m2 col":
             self.matrix2.setColumnCount(self.matrix2.columnCount() + 1)
 
+    def OperationToDo(self):
+        sender = self.sender()
+        if sender.accessibleName() == "summation":
+            self.Operation_for_now = "summation"
 
+        elif sender.accessibleName() == "multiplication":
+            self.CheckMultiplication()
+            self.Operation_for_now = "multiplication"
 
+        elif sender.accessibleName() == "subtraction":
+            self.Operation_for_now = "subtraction"
 
-
-
-
-
-
-
-
+        elif sender.accessibleName() == "determinant":
+            self.Operation_for_now = "determinant"
 
 
 if __name__ == '__main__':
