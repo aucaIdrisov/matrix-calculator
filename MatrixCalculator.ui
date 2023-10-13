@@ -144,7 +144,7 @@
      </rect>
     </property>
     <property name="accessibleName">
-     <string>m2 row</string>
+     <string>m2 col</string>
     </property>
     <property name="text">
      <string>Add col</string>
@@ -156,32 +156,32 @@
       <x>440</x>
       <y>150</y>
       <width>110</width>
-      <height>103</height>
+      <height>110</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QRadioButton" name="multiplication">
        <property name="text">
         <string>Multiplication</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QRadioButton" name="subtraction">
        <property name="text">
         <string>Subtraction</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QRadioButton" name="determinant">
        <property name="text">
         <string>Determinant</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="0" column="0">
       <widget class="QRadioButton" name="summation">
        <property name="text">
         <string>Summation</string>

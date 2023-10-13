@@ -32,6 +32,12 @@ class MatrixCalculator(QMainWindow):
         elif sender.accessibleName() == "m1 col":
             self.matrix1.setColumnCount(self.matrix1.columnCount() + 1)
 
+        elif sender.accessibleName() == "m2 row":
+            self.matrix2.setRowCount(self.matrix2.rowCount() + 1)
+
+        elif sender.accessibleName() == "m2 col":
+            self.matrix2.setColumnCount(self.matrix2.columnCount() + 1)
+
 
 
 
