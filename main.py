@@ -1,6 +1,6 @@
 import csv
 import sys
-
+import numpy as np
 from PyQt5 import uic
 from PyQt5.Qt import QHeaderView
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
@@ -10,7 +10,6 @@ class MatrixCalculator(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("MatrixCalculator.ui", self)
-        self.prise_list = {}
         self.Operation_for_now = None
         self.initUI()
 
@@ -29,11 +28,25 @@ class MatrixCalculator(QMainWindow):
         self.subtraction.toggled.connect(self.OperationToDo)
         self.determinant.toggled.connect(self.OperationToDo)
 
+    # TODO обвернуть переделку таблицы в матрицу NumPy в функцию
+
+    def TableToMatrix(self, matrix):  # get matrix
+
+        list_matrix = []
+        list_row_matrix = []
+        for i in range(matrix.rowCount()):
+            for j in range(matrix.rowCount()):  # apply to it methods,
+                list_row_matrix.append(int(matrix.item(i, j).text()))
+
+            list_matrix.append(list_row_matrix)
+            list_row_matrix = []
+        # returns NumPy
+        return np.array(list_matrix)
+
     def CheckMultiplication(self):
-        for i in range(self.matrix1.rowCount()):
-            for j in range(self.matrix1.rowCount()):
-                print(self.matrix1.item(i, j).text(), end=" ")
-            print()
+        if self.matrix1.columnCount() == self.matrix2.rowCount():
+            return True
+        return False
 
     def MatrixAdd(self):
         sender = self.sender()
@@ -55,9 +68,14 @@ class MatrixCalculator(QMainWindow):
             self.Operation_for_now = "summation"
 
         elif sender.accessibleName() == "multiplication":
-            self.CheckMultiplication()
-            self.Operation_for_now = "multiplication"
+            if self.CheckMultiplication():
+                np_matrix1 = self.TableToMatrix(self.matrix1)
+                np_matrix2 = self.TableToMatrix(self.matrix2)
 
+                print(np_matrix1.dot(np_matrix2))
+
+            self.Operation_for_now = "multiplication"
+        # TODO Построить архетиктуру, соединить с логическимим функциями
         elif sender.accessibleName() == "subtraction":
             self.Operation_for_now = "subtraction"
 
