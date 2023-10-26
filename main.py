@@ -5,6 +5,16 @@ from PyQt5 import uic
 from PyQt5.Qt import QHeaderView
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 
+import numpy as np
+
+
+def tableToMatrix(matrix):
+    if matrix.rowCount() != 1 and matrix.columnCount() != 1:
+        return np.array([[int(matrix.item(i, j).text())
+                          for j in range(matrix.columnCount())]
+                         for i in range(matrix.rowCount())])
+    return int(matrix.item(0, 0).text())
+
 
 class MatrixCalculator(QMainWindow):
     def __init__(self):
@@ -20,6 +30,7 @@ class MatrixCalculator(QMainWindow):
     def Run(self):
         self.bt_add_row1.clicked.connect(self.addToMatrix)
         self.bt_add_row2.clicked.connect(self.addToMatrix)
+
         self.bt_add_col1.clicked.connect(self.addToMatrix)
         self.bt_add_col2.clicked.connect(self.addToMatrix)
 
@@ -28,20 +39,15 @@ class MatrixCalculator(QMainWindow):
         self.subtraction.toggled.connect(self.operationToDo)
         self.determinant.toggled.connect(self.operationToDo)
 
-    def tableToMatrix(self, matrix):  # get matrix
-        list_matrix = []
-        list_row_matrix = []
-        for i in range(matrix.rowCount()):
-            for j in range(matrix.rowCount()):  # apply to it methods,
-                list_row_matrix.append(int(matrix.item(i, j).text()))
-
-            list_matrix.append(list_row_matrix)
-            list_row_matrix = []
-
-        return np.array(list_matrix)  # returns NumPy
-
     def checkMultiplication(self):
-        if self.matrix1.columnCount() == self.matrix2.rowCount():
+        if self.matrix1.columnCount() == self.matrix2.rowCount() or \
+                (self.matrix2.rowCount() == 1 and self.matrix2.columnCount() == 1):
+            return True
+        return False
+
+    def checkDimension(self):
+        if self.matrix1.columnCount() == self.matrix2.columnCount() \
+                and self.matrix1.rowCount() == self.matrix2.rowCount():
             return True
         return False
 
@@ -61,28 +67,42 @@ class MatrixCalculator(QMainWindow):
 
     def operationToDo(self):
         sender = self.sender()
-        np_matrix1 = self.tableToMatrix(self.matrix1)
-        np_matrix2 = self.tableToMatrix(self.matrix2)
+        np_matrix1 = tableToMatrix(self.matrix1)
+        np_matrix2 = tableToMatrix(self.matrix2)
 
         if sender.accessibleName() == "summation":
-            print(np_matrix1 + np_matrix2)
             self.operation_for_now = "summation"
 
-        # TODO Построить архетиктуру, соединить с логическимим функциями
+            if self.checkDimension():
+                print(np_matrix1 + np_matrix2)
+
         elif sender.accessibleName() == "subtraction":
-            print(np_matrix1 - np_matrix2)
             self.operation_for_now = "subtraction"
 
+            if self.checkDimension():
+                print(np_matrix1 - np_matrix2)
+
         elif sender.accessibleName() == "multiplication":
+            self.operation_for_now = "multiplication"
+
             if self.checkMultiplication():
                 # TODO оформить вывод ответа или ошибок в новое окно по нашатию кнопки
                 print(np_matrix1.dot(np_matrix2))  # cmd output of multiplied matrix
-            self.operation_for_now = "multiplication"
 
         elif sender.accessibleName() == "determinant":
-            # TODO Сделать что бы при выбори детерменанты вторая матрица становилась не изменяемой и исчезала
-            print(np.linalg.det(np_matrix1))
             self.operation_for_now = "determinant"
+
+            print(np.linalg.det(np_matrix1))
+
+            self.matrix2.setRowCount(0)
+            self.matrix2.setColumnCount(0)
+            # TODO Привязвть показ к кнопки калбкуляции
+
+            self.bt_add_col2.hide()
+            self.bt_add_row2.hide()
+            self.bt_del_col2.hide()
+            self.bt_del_row2.hide()
+            self.transpose2.hide()
 
 
 if __name__ == '__main__':

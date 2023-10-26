@@ -27,7 +27,7 @@
    <widget class="QPushButton" name="calculate">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>450</x>
       <y>430</y>
       <width>93</width>
       <height>28</height>
@@ -76,7 +76,7 @@
    <widget class="QCheckBox" name="transpose3">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>450</x>
       <y>400</y>
       <width>91</width>
       <height>20</height>
@@ -201,6 +201,70 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="bt_del_row1">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>120</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>m1 row</string>
+    </property>
+    <property name="text">
+     <string>Del row</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_del_col1">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>150</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>m1 col</string>
+    </property>
+    <property name="text">
+     <string>Del col</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_del_row2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>370</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>m1 row</string>
+    </property>
+    <property name="text">
+     <string>Del row</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_del_col2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>400</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>m1 col</string>
+    </property>
+    <property name="text">
+     <string>Del col</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
