@@ -212,7 +212,7 @@
      </rect>
     </property>
     <property name="accessibleName">
-     <string>m1 row</string>
+     <string>m1 row del</string>
     </property>
     <property name="text">
      <string>Del row</string>
@@ -228,7 +228,7 @@
      </rect>
     </property>
     <property name="accessibleName">
-     <string>m1 col</string>
+     <string>m1 col del</string>
     </property>
     <property name="text">
      <string>Del col</string>
@@ -244,7 +244,7 @@
      </rect>
     </property>
     <property name="accessibleName">
-     <string>m1 row</string>
+     <string>m2 row del</string>
     </property>
     <property name="text">
      <string>Del row</string>
@@ -260,10 +260,42 @@
      </rect>
     </property>
     <property name="accessibleName">
-     <string>m1 col</string>
+     <string>m2 col del</string>
     </property>
     <property name="text">
      <string>Del col</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_reset1">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>200</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>reset1</string>
+    </property>
+    <property name="text">
+     <string>Reset</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_reset2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>450</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string>reset2</string>
+    </property>
+    <property name="text">
+     <string>Reset</string>
     </property>
    </widget>
   </widget>

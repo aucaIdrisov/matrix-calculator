@@ -1,15 +1,16 @@
 import sys
 import numpy as np
 from PyQt5 import uic
-from PyQt5.Qt import QHeaderView
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 
 
 def tableToMatrix(matrix):
     if matrix.rowCount() != 1 and matrix.columnCount() != 1:
-        return np.array([[int(matrix.item(i, j).text())
+
+        return np.array([[float(matrix.item(i, j).text())
                           for j in range(matrix.columnCount())]
                          for i in range(matrix.rowCount())])
+
     return int(matrix.item(0, 0).text())
 
 
@@ -18,6 +19,7 @@ class MatrixCalculator(QMainWindow):
         super().__init__()
         uic.loadUi("MatrixCalculator.ui", self)
         self.result = None
+        self.np_matrix1, self.np_matrix2 = None, None
         self.initUI()
 
     def initUI(self):
@@ -25,13 +27,20 @@ class MatrixCalculator(QMainWindow):
         self.Run()
 
     def Run(self):
-        self.bt_add_row1.clicked.connect(self.addToMatrix)
-        self.bt_add_row2.clicked.connect(self.addToMatrix)
+        self.bt_add_row1.clicked.connect(self.manipTableSize)
+        self.bt_add_col1.clicked.connect(self.manipTableSize)
 
-        self.bt_add_col1.clicked.connect(self.addToMatrix)
-        self.bt_add_col2.clicked.connect(self.addToMatrix)
+        self.bt_del_col1.clicked.connect(self.manipTableSize)
+        self.bt_del_row1.clicked.connect(self.manipTableSize)
 
+        self.bt_add_row2.clicked.connect(self.manipTableSize)
+        self.bt_add_col2.clicked.connect(self.manipTableSize)
 
+        self.bt_del_row2.clicked.connect(self.manipTableSize)
+        self.bt_del_col2.clicked.connect(self.manipTableSize)
+
+        self.bt_reset1.clicked.connect(self.resetTableData)
+        self.bt_reset2.clicked.connect(self.resetTableData)
 
         self.calculate.clicked.connect(self.ShowCalculations)
 
@@ -52,71 +61,87 @@ class MatrixCalculator(QMainWindow):
             return True
         return False
 
-    def addToMatrix(self):
+    def resetTableData(self):
         sender = self.sender()
-        if sender.accessibleName() == "m1 row":
-            self.matrix1.setRowCount(self.matrix1.rowCount() + 1)
 
-        elif sender.accessibleName() == "m1 row del":
-            self.matrix1.setRowCount(self.matrix1.rowCount() - 1)
+        if sender.accessibleName() == "reset1":
+            table = self.matrix1
+        else:
+            table = self.matrix2
 
-        elif sender.accessibleName() == "m1 col":
-            self.matrix1.setColumnCount(self.matrix1.columnCount() + 1)
+        for i in range(table.rowCount()):
+            for j in range(table.columnCount()):
+                table.setItem(i, j, None)
 
-        elif sender.accessibleName() == "m1 col del":
-            self.matrix1.setColumnCount(self.matrix1.columnCount() - 1)
+    def manipTableSize(self):
 
-        elif sender.accessibleName() == "m2 row":
-            self.matrix2.setRowCount(self.matrix2.rowCount() + 1)
+        sender = self.sender()
+        if sender.accessibleName().startswith("m1"):
+            matrix = self.matrix1
+            matrix_num = "1"
+        else:
+            matrix = self.matrix2
+            matrix_num = "2"
 
-        elif sender.accessibleName() == "m2 row del":
-            self.matrix2.setRowCount(self.matrix2.rowCount() - 1)
+        if sender.accessibleName() == f"m{matrix_num} row":
+            matrix.setRowCount(matrix.rowCount() + 1)
 
-        elif sender.accessibleName() == "m2 col":
-            self.matrix2.setColumnCount(self.matrix2.columnCount() + 1)
+        elif sender.accessibleName() == f"m{matrix_num} row del":
+            matrix.setRowCount(matrix.rowCount() - 1)
 
-        elif sender.accessibleName() == "m2 col del":
-            self.matrix2.setColumnCount(self.matrix2.columnCount() - 1)
+        elif sender.accessibleName() == f"m{matrix_num} col":
+            matrix.setColumnCount(matrix.columnCount() + 1)
+
+        elif sender.accessibleName() == f"m{matrix_num} col del":
+            matrix.setColumnCount(matrix.columnCount() - 1)
+
+    def ShowCalculations(self):
+        print(type(self.result))
+        if type(self.result) == float:
+            print(f"{self.result} is float typed")
+
+        else:
+            row, col = self.result.shape
+            print(row, col)
+            for i in range(row):
+                for j in range(col):
+                    print(f"{self.result[i, j]}", end="  ")
+                print()
+            print()
 
     def operationToDo(self):
         sender = self.sender()
-        np_matrix1 = tableToMatrix(self.matrix1)
-        np_matrix2 = tableToMatrix(self.matrix2)
+        # TODO акрнуть tableToMatrix(arg) в класс
+        #  Построить логику проверки транспозиции до перевода маьрицы в MumPy
+
+        self.np_matrix1 = tableToMatrix(self.matrix1)
+        self.np_matrix2 = tableToMatrix(self.matrix2)
 
         if sender.accessibleName() == "summation":
 
             if self.checkDimension():
-                self.result = np_matrix1 + np_matrix2
+                self.result = self.np_matrix1 + self.np_matrix2
+                self.ShowCalculations()
 
         elif sender.accessibleName() == "subtraction":
 
             if self.checkDimension():
-                self.result = np_matrix1 - np_matrix2
+                self.result = self.np_matrix1 - self.np_matrix2
+                self.ShowCalculations()
 
         elif sender.accessibleName() == "multiplication":
 
             if self.checkMultiplication():
-                # TODO оформить вывод ответа или ошибок в новое окно по нашатию кнопки
-                self.result = np_matrix1.dot(np_matrix2)  # cmd output of multiplied matrix
+                # TODO оформить вывод ответа или ошибок в новое окно по нажатию кнопки
+                self.result = self.np_matrix1.dot(self.np_matrix2)
+                self.ShowCalculations()
 
         elif sender.accessibleName() == "determinant":
 
-            self.matrix2.setRowCount(0)
-            self.matrix2.setColumnCount(0)
-            # TODO Привязвть показ к кнопки калькуляции
+            det = np.linalg.det(self.np_matrix1)
+            self.result = float(f"{det:.3f}")
 
-            self.bt_add_col2.hide()
-            self.bt_add_row2.hide()
-            self.bt_del_col2.hide()
-            self.bt_del_row2.hide()
-            self.transpose2.hide()
-
-            self.result = np.linalg.det(np_matrix1)
-
-    def ShowCalculations(self):
-
-
-
+            self.ShowCalculations()
 
 
 if __name__ == '__main__':
