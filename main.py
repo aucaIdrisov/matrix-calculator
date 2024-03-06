@@ -1,17 +1,41 @@
 import sys
 import numpy as np
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QDialog, QLabel, QVBoxLayout
 
 
 def tableToMatrix(matrix):
     if matrix.rowCount() != 1 and matrix.columnCount() != 1:
-
         return np.array([[float(matrix.item(i, j).text())
                           for j in range(matrix.columnCount())]
                          for i in range(matrix.rowCount())])
 
     return int(matrix.item(0, 0).text())
+
+
+class ResultWindow(QDialog):
+    def __init__(self, result):
+        super().__init__()
+        self.setWindowTitle('Result Window')
+
+        layout = QVBoxLayout()
+        self.result_label = QLabel()
+        layout.addWidget(self.result_label)
+        self.setLayout(layout)
+
+        self.display_result(result)
+
+    def display_result(self, result):
+        if type(result) == float:
+            self.result_label.setText(str(result))
+        else:
+            row, col = result.shape
+            result_str = ""
+            for i in range(row):
+                for j in range(col):
+                    result_str += f"{result[i, j]}\t"
+                result_str += "\n"
+            self.result_label.setText(result_str)
 
 
 class MatrixCalculator(QMainWindow):
@@ -43,11 +67,6 @@ class MatrixCalculator(QMainWindow):
         self.bt_reset2.clicked.connect(self.resetTableData)
 
         self.calculate.clicked.connect(self.ShowCalculations)
-
-        self.summation.toggled.connect(self.operationToDo)
-        self.multiplication.toggled.connect(self.operationToDo)
-        self.subtraction.toggled.connect(self.operationToDo)
-        self.determinant.toggled.connect(self.operationToDo)
 
     def checkMultiplication(self):
         if self.matrix1.columnCount() == self.matrix2.rowCount() or \
@@ -96,52 +115,40 @@ class MatrixCalculator(QMainWindow):
             matrix.setColumnCount(matrix.columnCount() - 1)
 
     def ShowCalculations(self):
-        print(type(self.result))
-        if type(self.result) == float:
-            print(f"{self.result} is float typed")
-
+        self.operationToDo()
+        if type(self.result) == float or type(self.result) == np.ndarray:
+            result_window = ResultWindow(self.result)
         else:
-            row, col = self.result.shape
-            print(row, col)
-            for i in range(row):
-                for j in range(col):
-                    print(f"{self.result[i, j]}", end="  ")
-                print()
-            print()
+            result_window = ResultWindow(self.result)
+        result_window.exec_()
 
     def operationToDo(self):
-        sender = self.sender()
-        # TODO акрнуть tableToMatrix(arg) в класс
-        #  Построить логику проверки транспозиции до перевода маьрицы в MumPy
+
+        # TODO Построить логику проверки транспозиции до перевода маьрицы в MumPy
 
         self.np_matrix1 = tableToMatrix(self.matrix1)
         self.np_matrix2 = tableToMatrix(self.matrix2)
 
-        if sender.accessibleName() == "summation":
+        if self.summation.isChecked():
 
             if self.checkDimension():
                 self.result = self.np_matrix1 + self.np_matrix2
-                self.ShowCalculations()
 
-        elif sender.accessibleName() == "subtraction":
+        elif self.subtraction.isChecked():
 
             if self.checkDimension():
                 self.result = self.np_matrix1 - self.np_matrix2
-                self.ShowCalculations()
 
-        elif sender.accessibleName() == "multiplication":
+        elif self.multiplication.isChecked():
 
             if self.checkMultiplication():
                 # TODO оформить вывод ответа или ошибок в новое окно по нажатию кнопки
                 self.result = self.np_matrix1.dot(self.np_matrix2)
-                self.ShowCalculations()
 
-        elif sender.accessibleName() == "determinant":
+        elif self.determinant.isChecked():
 
             det = np.linalg.det(self.np_matrix1)
             self.result = float(f"{det:.3f}")
-
-            self.ShowCalculations()
 
 
 if __name__ == '__main__':
