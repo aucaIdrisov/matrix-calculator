@@ -80,6 +80,19 @@ class MatrixCalculator(QMainWindow):
             return True
         return False
 
+    def checkTranspose(self):
+
+        if self.transpose1.isChecked():
+            self.np_matrix1 = self.np_matrix1.transpose()
+
+        if self.transpose2.isChecked():
+            self.np_matrix2 = self.np_matrix2.transpose()
+
+        if type(self.result) == np.ndarray and self.transpose3.isChecked():
+            print(self.result)
+            self.result = self.result.transpose()
+            print(self.result)
+
     def resetTableData(self):
         sender = self.sender()
 
@@ -115,7 +128,10 @@ class MatrixCalculator(QMainWindow):
             matrix.setColumnCount(matrix.columnCount() - 1)
 
     def ShowCalculations(self):
+
         self.operationToDo()
+        self.checkTranspose()
+
         if type(self.result) == float or type(self.result) == np.ndarray:
             result_window = ResultWindow(self.result)
         else:
@@ -129,24 +145,23 @@ class MatrixCalculator(QMainWindow):
         self.np_matrix1 = tableToMatrix(self.matrix1)
         self.np_matrix2 = tableToMatrix(self.matrix2)
 
+        self.checkTranspose()
+
         if self.summation.isChecked():
 
             if self.checkDimension():
                 self.result = self.np_matrix1 + self.np_matrix2
-
         elif self.subtraction.isChecked():
 
             if self.checkDimension():
                 self.result = self.np_matrix1 - self.np_matrix2
-
         elif self.multiplication.isChecked():
 
             if self.checkMultiplication():
                 # TODO оформить вывод ответа или ошибок в новое окно по нажатию кнопки
                 self.result = self.np_matrix1.dot(self.np_matrix2)
-
         elif self.determinant.isChecked():
-
+            self.resetTableData()
             det = np.linalg.det(self.np_matrix1)
             self.result = float(f"{det:.3f}")
 
