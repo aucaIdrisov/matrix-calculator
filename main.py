@@ -1,16 +1,33 @@
 import sys
 import numpy as np
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QDialog, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QLabel, QVBoxLayout
+
+
+class ErrorWindow(QDialog):
+    def __init__(self, error_mgs):
+        super().__init__()
+        self.setWindowTitle('Error')
+        layout = QVBoxLayout()
+        self.error_label = QLabel()
+        layout.addWidget(self.error_label)
+        self.setLayout(layout)
+
+        self.displayError(error_mgs)
+
+    def displayError(self, error_mgs):
+        self.error_label.setText(str(error_mgs))
 
 
 def tableToMatrix(matrix):
-    if matrix.rowCount() != 1 and matrix.columnCount() != 1:
-        return np.array([[float(matrix.item(i, j).text())
-                          for j in range(matrix.columnCount())]
-                         for i in range(matrix.rowCount())])
-
-    return int(matrix.item(0, 0).text())
+    try:
+        if matrix.rowCount() != 1 and matrix.columnCount() != 1:
+            return np.array([[float(matrix.item(i, j).text() if matrix.item(i, j) else '0')
+                              for j in range(matrix.columnCount())]
+                             for i in range(matrix.rowCount())])
+        return int(matrix.item(0, 0).text() if matrix.item(0, 0) else '0')
+    except ValueError as e:
+        raise ValueError(f"Invalid input in matrix: {e}")
 
 
 class ResultWindow(QDialog):
@@ -23,9 +40,9 @@ class ResultWindow(QDialog):
         layout.addWidget(self.result_label)
         self.setLayout(layout)
 
-        self.display_result(result)
+        self.displayResult(result)
 
-    def display_result(self, result):
+    def displayResult(self, result):
         if type(result) == float:
             self.result_label.setText(str(result))
         else:
@@ -44,6 +61,7 @@ class MatrixCalculator(QMainWindow):
         uic.loadUi("MatrixCalculator.ui", self)
         self.result = None
         self.np_matrix1, self.np_matrix2 = None, None
+        self.NoErrors = True
         self.initUI()
 
     def initUI(self):
@@ -89,9 +107,7 @@ class MatrixCalculator(QMainWindow):
             self.np_matrix2 = self.np_matrix2.transpose()
 
         if type(self.result) == np.ndarray and self.transpose3.isChecked():
-            print(self.result)
             self.result = self.result.transpose()
-            print(self.result)
 
     def resetTableData(self):
         sender = self.sender()
@@ -128,42 +144,45 @@ class MatrixCalculator(QMainWindow):
             matrix.setColumnCount(matrix.columnCount() - 1)
 
     def ShowCalculations(self):
-
-        self.operationToDo()
-        self.checkTranspose()
-
-        if type(self.result) == float or type(self.result) == np.ndarray:
-            result_window = ResultWindow(self.result)
-        else:
-            result_window = ResultWindow(self.result)
-        result_window.exec_()
+        try:
+            self.operationToDo()
+            if self.NoErrors:
+                result_window = ResultWindow(self.result)
+                result_window.exec_()
+        except Exception as e:
+            error_window = ErrorWindow(str(e))
+            error_window.exec_()
 
     def operationToDo(self):
+        try:
+            self.np_matrix1 = tableToMatrix(self.matrix1)
+            self.np_matrix2 = tableToMatrix(self.matrix2)
+            self.checkTranspose()
 
-        # TODO Построить логику проверки транспозиции до перевода маьрицы в MumPy
+            self.checkTranspose()
 
-        self.np_matrix1 = tableToMatrix(self.matrix1)
-        self.np_matrix2 = tableToMatrix(self.matrix2)
+            if self.summation.isChecked():
 
-        self.checkTranspose()
+                if self.checkDimension():
+                    self.result = self.np_matrix1 + self.np_matrix2
+            elif self.subtraction.isChecked():
 
-        if self.summation.isChecked():
+                if self.checkDimension():
+                    self.result = self.np_matrix1 - self.np_matrix2
+            elif self.multiplication.isChecked():
 
-            if self.checkDimension():
-                self.result = self.np_matrix1 + self.np_matrix2
-        elif self.subtraction.isChecked():
+                if self.checkMultiplication():
+                    self.result = self.np_matrix1.dot(self.np_matrix2)
+            elif self.determinant.isChecked():
+                self.resetTableData()
+                det = np.linalg.det(self.np_matrix1)
+                self.result = float(f"{det:.3f}")
 
-            if self.checkDimension():
-                self.result = self.np_matrix1 - self.np_matrix2
-        elif self.multiplication.isChecked():
-
-            if self.checkMultiplication():
-                # TODO оформить вывод ответа или ошибок в новое окно по нажатию кнопки
-                self.result = self.np_matrix1.dot(self.np_matrix2)
-        elif self.determinant.isChecked():
-            self.resetTableData()
-            det = np.linalg.det(self.np_matrix1)
-            self.result = float(f"{det:.3f}")
+            else:
+                self.NoErrors = False
+        except ValueError as e:
+            self.NoErrors = False
+            raise ValueError(str(e))
 
 
 if __name__ == '__main__':
